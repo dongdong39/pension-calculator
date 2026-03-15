@@ -318,6 +318,61 @@ header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; 
 }
 .tag.good { background: rgba(74, 222, 128, 0.12); color: #6ee7a0; }
 .tag.warn { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+.tag.bad { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+
+/* Guide Detail */
+.guide-detail {
+    margin-top: 12px; padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.2); border-radius: 8px;
+    font-size: 12px; color: #a09bb5; line-height: 1.6;
+}
+.guide-detail strong { color: #d0ccf0; }
+
+/* Warning Box */
+.warning-box {
+    padding: 18px; border-radius: 12px; margin-bottom: 16px;
+    background: rgba(248, 113, 113, 0.08);
+    border: 1px solid rgba(248, 113, 113, 0.2);
+}
+.warning-box h3 { font-size: 15px; font-weight: 700; color: #fca5a5; margin-bottom: 10px; }
+.warning-box p { font-size: 14px; color: #d4d0e8; line-height: 1.7; }
+.warning-box p strong { color: #f87171; }
+.warning-example {
+    margin-top: 12px; padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.25); border-radius: 8px;
+    font-size: 13px; color: #b0adc0; line-height: 1.7;
+}
+.warning-example strong { color: #f87171; }
+
+/* Compare Box */
+.compare-box {
+    padding: 18px; border-radius: 12px; margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.compare-box h3 { font-size: 15px; font-weight: 700; color: #e0ddf0; margin-bottom: 12px; }
+.compare-table { border-radius: 8px; overflow: hidden; }
+.compare-row {
+    display: grid; grid-template-columns: 1fr 1.2fr 1.2fr;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.compare-row span {
+    padding: 10px 12px; font-size: 13px; color: #c5c1d6; text-align: center;
+}
+.compare-row.header span {
+    background: rgba(255, 255, 255, 0.05); color: #a09bb5; font-weight: 600; font-size: 12px;
+}
+.compare-row span:first-child { text-align: left; font-weight: 600; color: #b0adc0; }
+.compare-row span small { display: block; font-size: 11px; color: #8a85a0; margin-top: 2px; }
+.compare-row span.green { color: #6ee7a0; }
+.compare-row span.yellow { color: #fbbf24; }
+.compare-row span.red { color: #f87171; }
+.compare-note {
+    margin-top: 12px; padding: 10px 14px;
+    background: rgba(74, 222, 128, 0.08); border-radius: 8px;
+    font-size: 13px; color: #a09bb5; text-align: center; line-height: 1.5;
+}
+.compare-note strong { color: #6ee7a0; }
 
 /* Tax Benefit Box */
 .tax-benefit-box {
