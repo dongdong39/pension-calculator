@@ -3,8 +3,12 @@ let retirementType = 'both'; // 'both', 'annuity', 'lumpsum'
 
 function setRetirementType(btn) {
     retirementType = btn.dataset.value;
-    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    // 슬라이딩 배경 이동
+    const index = parseInt(btn.dataset.index);
+    const bg = document.getElementById('segmentBg');
+    bg.style.transform = `translateX(${index * 100}%)`;
 }
 
 // 숫자 포맷 (콤마)

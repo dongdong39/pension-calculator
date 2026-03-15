@@ -111,12 +111,12 @@
 
                 <div class="input-group">
                     <label>퇴직금 수령 방식</label>
-                    <div class="toggle-group">
-                        <button class="toggle-btn active" data-value="both" onclick="setRetirementType(this)">둘 다 비교</button>
-                        <button class="toggle-btn" data-value="annuity" onclick="setRetirementType(this)">연금으로 수령</button>
-                        <button class="toggle-btn" data-value="lumpsum" onclick="setRetirementType(this)">일시금으로 수령</button>
+                    <div class="segment-control">
+                        <div class="segment-bg" id="segmentBg"></div>
+                        <button class="segment-btn active" data-value="both" data-index="0" onclick="setRetirementType(this)">둘 다 비교</button>
+                        <button class="segment-btn" data-value="annuity" data-index="1" onclick="setRetirementType(this)">연금 수령</button>
+                        <button class="segment-btn" data-value="lumpsum" data-index="2" onclick="setRetirementType(this)">일시금 수령</button>
                     </div>
-                    <div class="input-hint">퇴직금을 매달 나눠 받을지, 한번에 받을지 선택</div>
                 </div>
             </div>
 
