@@ -131,10 +131,12 @@ function calculate() {
 
     // 기본연금액 = (A + B) × P × (가입년수/20)
     // P값: 20년 가입 기준 1.2, 대략 가입년수에 비례
-    // 간이: 월 수령액 ≈ (A + B) × 가입년수 × 0.015 (대략적 계수)
+    // 간이: 월 수령액 ≈ (A + B) × 가입년수 × 0.005
+    // 실제 국민연금공단 예상 수령액과 유사하도록 보정된 계수
+    // (월소득 400만, 30년 가입 → 약 100만원/월 수준)
     let nationalPensionMonthly = 0;
     if (nationalPensionYears > 0) {
-        nationalPensionMonthly = (avgA + cappedMonthly) * Math.min(nationalPensionYears, 40) * 0.015;
+        nationalPensionMonthly = (avgA + cappedMonthly) * Math.min(nationalPensionYears, 40) * 0.005;
     }
     nationalPensionMonthly = Math.max(0, Math.round(nationalPensionMonthly * 10) / 10);
 
