@@ -10,14 +10,14 @@
     <div class="container">
         <header>
             <h1>연금 계산기</h1>
-            <p class="subtitle">은퇴 후 필요한 개인연금을 계산해보세요</p>
+            <p class="subtitle">은퇴 후 필요한 개인연금을 쉽게 계산해보세요</p>
         </header>
 
         <!-- Progress Bar -->
         <div class="progress-bar">
             <div class="progress-step active" data-step="1">
                 <div class="step-circle">1</div>
-                <span class="step-label">목표 설정</span>
+                <span class="step-label">목표</span>
             </div>
             <div class="progress-line"></div>
             <div class="progress-step" data-step="2">
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <!-- Step 1: 목표 설정 -->
+        <!-- ═══════ Step 1: 목표 설정 ═══════ -->
         <div class="step-content active" id="step1">
             <div class="card">
                 <h2>은퇴 후 매달 얼마를 받고 싶으신가요?</h2>
@@ -48,75 +48,143 @@
 
                 <div class="quick-select">
                     <span class="quick-label">빠른 선택</span>
-                    <button class="quick-btn" data-value="200">200만원</button>
-                    <button class="quick-btn" data-value="300">300만원</button>
-                    <button class="quick-btn" data-value="400">400만원</button>
-                    <button class="quick-btn" data-value="500">500만원</button>
+                    <button class="quick-btn" data-target="desiredMonthly" data-value="200">200만원</button>
+                    <button class="quick-btn" data-target="desiredMonthly" data-value="300">300만원</button>
+                    <button class="quick-btn" data-target="desiredMonthly" data-value="400">400만원</button>
+                    <button class="quick-btn" data-target="desiredMonthly" data-value="500">500만원</button>
                 </div>
             </div>
-
             <div class="nav-buttons">
                 <div></div>
                 <button class="btn btn-next" onclick="nextStep(1)">다음 단계 →</button>
             </div>
         </div>
 
-        <!-- Step 2: 내 정보 -->
+        <!-- ═══════ Step 2: 내 정보 ═══════ -->
         <div class="step-content" id="step2">
+
+            <!-- 기본 정보 -->
             <div class="card">
-                <h2>현재 상황을 알려주세요</h2>
-                <p class="description">정확한 계산을 위해 아래 정보를 입력해주세요.</p>
-
-                <div class="input-group">
-                    <label for="currentAge">현재 나이</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="currentAge" inputmode="numeric" placeholder="30" />
-                        <span class="unit">세</span>
+                <div class="section-title">기본 정보</div>
+                <div class="input-row">
+                    <div class="input-group half">
+                        <label for="currentAge">현재 나이</label>
+                        <div class="input-wrapper compact">
+                            <input type="text" id="currentAge" inputmode="numeric" placeholder="30" />
+                            <span class="unit">세</span>
+                        </div>
+                    </div>
+                    <div class="input-group half">
+                        <label for="annualSalary">현재 연봉</label>
+                        <div class="input-wrapper compact">
+                            <input type="text" id="annualSalary" inputmode="numeric" placeholder="5000" />
+                            <span class="unit">만원</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="input-group">
-                    <label for="annualSalary">현재 연봉</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="annualSalary" inputmode="numeric" placeholder="5000" />
-                        <span class="unit">만원</span>
+                <div class="input-row">
+                    <div class="input-group half">
+                        <label for="yearsWorked">총 근무 년수</label>
+                        <div class="input-wrapper compact">
+                            <input type="text" id="yearsWorked" inputmode="numeric" placeholder="5" />
+                            <span class="unit">년</span>
+                        </div>
+                    </div>
+                    <div class="input-group half">
+                        <label for="retirementAge">정년 퇴직 나이</label>
+                        <div class="input-wrapper compact">
+                            <input type="text" id="retirementAge" inputmode="numeric" placeholder="60" />
+                            <span class="unit">세</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="input-group">
-                    <label for="yearsWorked">총 근무 년수</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="yearsWorked" inputmode="numeric" placeholder="5" />
-                        <span class="unit">년</span>
-                    </div>
-                    <div class="input-hint">현재 직장 포함 총 경력</div>
-                </div>
-
-                <div class="input-group">
-                    <label for="retirementAge">정년 퇴직 나이</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="retirementAge" inputmode="numeric" placeholder="60" />
-                        <span class="unit">세</span>
-                    </div>
-                </div>
-
                 <div class="input-group">
                     <label for="pensionReceiveAge">연금 수령 시작 나이</label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper compact">
                         <input type="text" id="pensionReceiveAge" inputmode="numeric" placeholder="65" />
                         <span class="unit">세</span>
                     </div>
                     <div class="input-hint">국민연금 수령 개시 나이 (1969년 이후 출생: 65세)</div>
                 </div>
+            </div>
 
+            <!-- 퇴직연금 설정 -->
+            <div class="card" style="margin-top:16px">
+                <div class="section-title">퇴직연금 설정</div>
+
+                <!-- DB/DC 선택 -->
                 <div class="input-group">
-                    <label>퇴직금 수령 방식</label>
-                    <div class="segment-control">
-                        <div class="segment-bg" id="segmentBg"></div>
-                        <button class="segment-btn active" data-value="both" data-index="0" onclick="setRetirementType(this)">둘 다 비교</button>
-                        <button class="segment-btn" data-value="annuity" data-index="1" onclick="setRetirementType(this)">연금 수령</button>
-                        <button class="segment-btn" data-value="lumpsum" data-index="2" onclick="setRetirementType(this)">일시금 수령</button>
+                    <label>내 퇴직연금 유형은?</label>
+                    <div class="segment-control" id="dbdcSegment">
+                        <div class="segment-bg" id="dbdcBg"></div>
+                        <button class="segment-btn active" data-value="db" data-index="0" onclick="setDBDC(this)">DB (확정급여)</button>
+                        <button class="segment-btn" data-value="dc" data-index="1" onclick="setDBDC(this)">DC (확정기여)</button>
                     </div>
+                </div>
+
+                <!-- DB/DC 설명 카드 -->
+                <div class="explain-cards">
+                    <div class="explain-card active" id="explainDB">
+                        <div class="explain-icon">🏢</div>
+                        <div class="explain-title">DB — 확정급여형</div>
+                        <div class="explain-body">
+                            <strong>회사가 운용</strong>하고, 퇴직 시 <strong>마지막 월급 × 근무년수</strong>를 받아요.<br>
+                            월급이 꾸준히 오르면 유리합니다.
+                        </div>
+                    </div>
+                    <div class="explain-card" id="explainDC">
+                        <div class="explain-icon">👤</div>
+                        <div class="explain-title">DC — 확정기여형</div>
+                        <div class="explain-body">
+                            매년 <strong>연봉의 1/12</strong>이 내 계좌에 적립되고, <strong>내가 직접 투자</strong>해요.<br>
+                            투자를 잘하면 DB보다 더 받을 수 있어요.
+                        </div>
+                    </div>
+                </div>
+                <div class="input-hint" style="margin-top:4px">잘 모르겠다면? 회사 인사팀에 문의하세요. 대부분 DB입니다.</div>
+
+                <!-- 임금인상률 -->
+                <div class="input-group" style="margin-top:20px">
+                    <label for="wageGrowth">예상 임금인상률 (연평균)</label>
+                    <div class="input-wrapper compact">
+                        <input type="text" id="wageGrowth" inputmode="numeric" placeholder="3" />
+                        <span class="unit">%</span>
+                    </div>
+                    <div class="quick-select compact">
+                        <button class="quick-btn small" data-target="wageGrowth" data-value="2">2%</button>
+                        <button class="quick-btn small" data-target="wageGrowth" data-value="3">3%</button>
+                        <button class="quick-btn small" data-target="wageGrowth" data-value="4">4%</button>
+                        <button class="quick-btn small" data-target="wageGrowth" data-value="5">5%</button>
+                    </div>
+                    <div class="input-hint">일반적으로 연 3~5% 수준입니다</div>
+                </div>
+
+                <!-- 운용수익률 (DC만) -->
+                <div class="input-group dc-only" id="returnRateGroup">
+                    <label for="returnRate">예상 운용수익률 (DC 투자수익)</label>
+                    <div class="input-wrapper compact">
+                        <input type="text" id="returnRate" inputmode="numeric" placeholder="5" />
+                        <span class="unit">%</span>
+                    </div>
+                    <div class="quick-select compact">
+                        <button class="quick-btn small" data-target="returnRate" data-value="3">3%</button>
+                        <button class="quick-btn small" data-target="returnRate" data-value="5">5%</button>
+                        <button class="quick-btn small" data-target="returnRate" data-value="7">7%</button>
+                        <button class="quick-btn small" data-target="returnRate" data-value="10">10%</button>
+                    </div>
+                    <div class="input-hint">원리금보장 2~3%, 혼합형 4~6%, 공격형 7%+</div>
+                </div>
+
+                <!-- 퇴직금 수령 방식 -->
+                <div class="input-group" style="margin-top:20px">
+                    <label>퇴직금 수령 방식</label>
+                    <div class="segment-control" id="receiveSegment">
+                        <div class="segment-bg" id="receiveBg"></div>
+                        <button class="segment-btn active" data-value="both" data-index="0" onclick="setReceiveType(this)">둘 다 비교</button>
+                        <button class="segment-btn" data-value="annuity" data-index="1" onclick="setReceiveType(this)">연금 수령</button>
+                        <button class="segment-btn" data-value="lumpsum" data-index="2" onclick="setReceiveType(this)">일시금 수령</button>
+                    </div>
+                    <div class="input-hint">연금으로 받으면 세금이 30~40% 감면됩니다</div>
                 </div>
             </div>
 
@@ -126,11 +194,12 @@
             </div>
         </div>
 
-        <!-- Step 3: 결과 -->
+        <!-- ═══════ Step 3: 결과 ═══════ -->
         <div class="step-content" id="step3">
             <div class="card result-card">
                 <h2>계산 결과</h2>
 
+                <!-- 희망 수령액 -->
                 <div class="result-summary">
                     <div class="result-item highlight">
                         <span class="result-label">희망 월 수령액</span>
@@ -138,89 +207,221 @@
                     </div>
                 </div>
 
+                <!-- 국민연금 -->
                 <div class="result-section">
-                    <h3>공통 예상 수령액</h3>
+                    <h3>국민연금 (예상)</h3>
                     <div class="result-item">
-                        <span class="result-label">국민연금 예상액 (월)</span>
-                        <span class="result-value" id="resultNational">-</span>
+                        <span class="result-label">예상 가입기간</span>
+                        <span class="result-value" id="resultNationalYears">-</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">퇴직금 총액 (일시금)</span>
-                        <span class="result-value" id="resultLumpSum">-</span>
+                        <span class="result-label">월 예상 수령액</span>
+                        <span class="result-value accent" id="resultNational">-</span>
                     </div>
                 </div>
 
-                <!-- 케이스 A: 퇴직금을 연금으로 받는 경우 -->
+                <!-- 퇴직연금 -->
+                <div class="result-section">
+                    <h3>퇴직연금 (<span id="resultDBDCType">DB</span>)</h3>
+                    <div class="result-item">
+                        <span class="result-label">퇴직금 총액 (세전)</span>
+                        <span class="result-value" id="resultRetirementGross">-</span>
+                    </div>
+                    <div class="result-item sub">
+                        <span class="result-label">퇴직소득세 + 지방세</span>
+                        <span class="result-value dim" id="resultTax">-</span>
+                    </div>
+                    <div class="result-item sub">
+                        <span class="result-label">실효세율</span>
+                        <span class="result-value dim" id="resultTaxRate">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">퇴직금 실수령액</span>
+                        <span class="result-value accent" id="resultRetirementNet">-</span>
+                    </div>
+
+                    <!-- 세금 계산 과정 펼치기 -->
+                    <button class="expand-btn" onclick="toggleTaxDetail()">
+                        세금 계산 과정 보기 <span class="expand-arrow" id="taxArrow">▼</span>
+                    </button>
+                    <div class="expand-content" id="taxDetail">
+                        <div class="detail-row"><span>근속공제</span><span id="detailDeduction">-</span></div>
+                        <div class="detail-row"><span>퇴직소득과세표준</span><span id="detailTaxBase">-</span></div>
+                        <div class="detail-row"><span>연평균과세표준</span><span id="detailAnnualAvg">-</span></div>
+                        <div class="detail-row"><span>환산과세표준 (×12)</span><span id="detailConverted">-</span></div>
+                        <div class="detail-row"><span>차등공제</span><span id="detailDiffDeduction">-</span></div>
+                        <div class="detail-row"><span>최종 환산과세표준</span><span id="detailFinalBase">-</span></div>
+                        <div class="detail-row"><span>산출세액</span><span id="detailCalcTax">-</span></div>
+                        <div class="detail-row"><span>퇴직소득세</span><span id="detailIncomeTax">-</span></div>
+                        <div class="detail-row"><span>지방소득세 (10%)</span><span id="detailLocalTax">-</span></div>
+                    </div>
+                </div>
+
+                <!-- 케이스 A: 연금 수령 -->
                 <div class="case-block" id="caseAnnuity">
-                    <div class="case-header case-a">케이스 A — 퇴직금을 연금으로 받는 경우</div>
-                    <div class="result-section">
+                    <div class="case-header case-a">퇴직금을 연금으로 받는 경우</div>
+                    <div class="result-section case-body">
                         <div class="result-item">
                             <span class="result-label">퇴직연금 월 수령액</span>
-                            <span class="result-value" id="resultRetirementMonthly">-</span>
+                            <span class="result-value" id="resultAnnuityMonthly">-</span>
+                        </div>
+                        <div class="result-item sub">
+                            <span class="result-label">연금 수령 시 세금 감면</span>
+                            <span class="result-value green" id="resultAnnuityTaxSave">-</span>
                         </div>
                         <div class="result-item total">
-                            <span class="result-label">연금 합계 (국민+퇴직)</span>
-                            <span class="result-value" id="resultTotalA">-</span>
+                            <span class="result-label">월 연금 합계 (국민+퇴직)</span>
+                            <span class="result-value green" id="resultTotalA">-</span>
                         </div>
                         <div class="result-item gap">
                             <span class="result-label">부족분 (월)</span>
                             <span class="result-value" id="resultGapA">-</span>
                         </div>
-                    </div>
-                    <div class="result-section">
-                        <h3>개인연금 월 납입액</h3>
-                        <p class="section-desc">부족분을 채우기 위해 매달 넣어야 할 금액</p>
-                        <div class="rate-table">
-                            <div class="rate-row header">
-                                <span>연 수익률</span>
-                                <span>월 납입액</span>
-                                <span>총 납입액</span>
+                        <div class="rate-section">
+                            <div class="rate-title">개인연금으로 매달 넣어야 할 금액</div>
+                            <div class="rate-table">
+                                <div class="rate-row header"><span>수익률</span><span>월 납입</span><span>총 납입</span></div>
+                                <div class="rate-row" id="rateA3"></div>
+                                <div class="rate-row" id="rateA5"></div>
+                                <div class="rate-row" id="rateA7"></div>
+                                <div class="rate-row" id="rateA10"></div>
                             </div>
-                            <div class="rate-row" id="rateA3"></div>
-                            <div class="rate-row" id="rateA5"></div>
-                            <div class="rate-row" id="rateA7"></div>
-                            <div class="rate-row" id="rateA10"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 케이스 B: 퇴직금을 일시금으로 받는 경우 -->
+                <!-- 케이스 B: 일시금 수령 -->
                 <div class="case-block" id="caseLumpsum">
-                    <div class="case-header case-b">케이스 B — 퇴직금을 일시금으로 받는 경우</div>
-                    <div class="result-section">
+                    <div class="case-header case-b">퇴직금을 일시금으로 받는 경우</div>
+                    <div class="result-section case-body">
                         <div class="result-item">
-                            <span class="result-label">퇴직금 일시금</span>
-                            <span class="result-value" id="resultLumpSum2">-</span>
+                            <span class="result-label">퇴직금 일시금 수령</span>
+                            <span class="result-value" id="resultLumpNet">-</span>
                         </div>
                         <div class="result-item total">
-                            <span class="result-label">연금 합계 (국민연금만)</span>
-                            <span class="result-value" id="resultTotalB">-</span>
+                            <span class="result-label">월 연금 합계 (국민연금만)</span>
+                            <span class="result-value green" id="resultTotalB">-</span>
                         </div>
                         <div class="result-item gap">
                             <span class="result-label">부족분 (월)</span>
                             <span class="result-value" id="resultGapB">-</span>
                         </div>
-                    </div>
-                    <div class="result-section">
-                        <h3>개인연금 월 납입액</h3>
-                        <p class="section-desc">퇴직금은 별도 보관, 부족분만 개인연금으로 채울 때</p>
-                        <div class="rate-table">
-                            <div class="rate-row header">
-                                <span>연 수익률</span>
-                                <span>월 납입액</span>
-                                <span>총 납입액</span>
+                        <div class="rate-section">
+                            <div class="rate-title">개인연금으로 매달 넣어야 할 금액</div>
+                            <div class="rate-table">
+                                <div class="rate-row header"><span>수익률</span><span>월 납입</span><span>총 납입</span></div>
+                                <div class="rate-row" id="rateB3"></div>
+                                <div class="rate-row" id="rateB5"></div>
+                                <div class="rate-row" id="rateB7"></div>
+                                <div class="rate-row" id="rateB10"></div>
                             </div>
-                            <div class="rate-row" id="rateB3"></div>
-                            <div class="rate-row" id="rateB5"></div>
-                            <div class="rate-row" id="rateB7"></div>
-                            <div class="rate-row" id="rateB10"></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 가정 -->
                 <div class="assumptions">
                     <h4>계산 가정</h4>
                     <ul id="assumptionsList"></ul>
+                </div>
+            </div>
+
+            <!-- ═══════ 개인연금 가이드 ═══════ -->
+            <div class="card guide-card" style="margin-top:20px">
+                <h2>개인연금이란?</h2>
+                <p class="description">국민연금, 퇴직연금 외에 <strong>내가 스스로 준비하는 3층 연금</strong>이에요.<br>세금 혜택도 받으면서 노후를 대비할 수 있습니다.</p>
+
+                <div class="pension-layer">
+                    <div class="layer layer-3">3층 — 개인연금 (내가 준비)</div>
+                    <div class="layer layer-2">2층 — 퇴직연금 (회사 + 나)</div>
+                    <div class="layer layer-1">1층 — 국민연금 (국가)</div>
+                </div>
+
+                <div class="guide-section">
+                    <div class="guide-card-item">
+                        <div class="guide-badge fund">추천</div>
+                        <h3>연금저축펀드</h3>
+                        <p class="guide-desc">증권사에서 가입하고, <strong>ETF나 펀드에 투자</strong>해요.</p>
+                        <ul class="guide-features">
+                            <li><span class="tag good">장점</span> 수수료 저렴, 다양한 투자 가능</li>
+                            <li><span class="tag good">장점</span> 세액공제 연 최대 600만원</li>
+                            <li><span class="tag good">장점</span> 자유로운 운용 변경</li>
+                            <li><span class="tag warn">주의</span> 원금 보장 안 됨, 투자 지식 필요</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-card-item">
+                        <h3>연금저축보험</h3>
+                        <p class="guide-desc">보험사에서 가입하고, <strong>보험사가 운용</strong>해줘요.</p>
+                        <ul class="guide-features">
+                            <li><span class="tag good">장점</span> 원금 보장 (공시이율형)</li>
+                            <li><span class="tag good">장점</span> 세액공제 연 최대 600만원</li>
+                            <li><span class="tag warn">주의</span> 수익률 낮음 (2~3%)</li>
+                            <li><span class="tag warn">주의</span> 중도해지 시 손해</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-card-item">
+                        <div class="guide-badge irp">필수</div>
+                        <h3>IRP (개인형 퇴직연금)</h3>
+                        <p class="guide-desc">퇴직금을 이체하거나, <strong>추가 납입</strong>으로 세금 혜택을 더 받아요.</p>
+                        <ul class="guide-features">
+                            <li><span class="tag good">장점</span> 추가 세액공제 연 최대 900만원 (연금저축 합산)</li>
+                            <li><span class="tag good">장점</span> 퇴직금 이체 시 세금 이연</li>
+                            <li><span class="tag good">장점</span> 예금~펀드까지 다양한 상품</li>
+                            <li><span class="tag warn">주의</span> 55세까지 인출 불가</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 세액공제 요약 -->
+                <div class="tax-benefit-box">
+                    <h3>세액공제 얼마나 돌려받나요?</h3>
+                    <div class="benefit-table">
+                        <div class="benefit-row header">
+                            <span>총급여</span>
+                            <span>공제율</span>
+                            <span>연금저축 한도</span>
+                            <span>IRP 포함 한도</span>
+                        </div>
+                        <div class="benefit-row">
+                            <span>5,500만원 이하</span>
+                            <span class="accent">16.5%</span>
+                            <span>600만원</span>
+                            <span>900만원</span>
+                        </div>
+                        <div class="benefit-row">
+                            <span>5,500만원 초과</span>
+                            <span class="accent">13.2%</span>
+                            <span>600만원</span>
+                            <span>900만원</span>
+                        </div>
+                    </div>
+                    <div class="benefit-example">
+                        예) 연봉 5,000만원, 연금저축+IRP에 연 900만원 납입 시<br>
+                        → 연말정산에서 <strong>약 148만원 환급</strong> (900만 × 16.5%)
+                    </div>
+                </div>
+
+                <!-- 추천 조합 -->
+                <div class="recommend-box">
+                    <h3>초보자 추천 조합</h3>
+                    <div class="recommend-flow">
+                        <div class="recommend-step">
+                            <div class="rec-num">1</div>
+                            <div class="rec-text"><strong>연금저축펀드</strong> 먼저 개설<br><span class="rec-sub">증권사 앱에서 바로 가능</span></div>
+                        </div>
+                        <div class="recommend-arrow">→</div>
+                        <div class="recommend-step">
+                            <div class="rec-num">2</div>
+                            <div class="rec-text"><strong>IRP</strong> 추가 개설<br><span class="rec-sub">세액공제 한도 채우기</span></div>
+                        </div>
+                        <div class="recommend-arrow">→</div>
+                        <div class="recommend-step">
+                            <div class="rec-num">3</div>
+                            <div class="rec-text"><strong>매달 자동이체</strong> 설정<br><span class="rec-sub">잊지 않고 꾸준히!</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -230,7 +431,7 @@
         </div>
 
         <footer>
-            <p>이 계산기는 참고용이며, 실제 연금 수령액은 다를 수 있습니다.</p>
+            <p>이 계산기는 참고용이며, 실제 수령액은 다를 수 있습니다.</p>
         </footer>
     </div>
 
