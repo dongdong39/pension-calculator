@@ -1,4 +1,11 @@
 let currentStep = 1;
+let retirementType = 'both'; // 'both', 'annuity', 'lumpsum'
+
+function setRetirementType(btn) {
+    retirementType = btn.dataset.value;
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
 
 // 숫자 포맷 (콤마)
 function formatNumber(num) {
@@ -146,51 +153,68 @@ function calculate() {
     // 퇴직연금으로 전환 시 월 수령액 (수령기간으로 나눔)
     const retirementPensionMonthly = retirementLumpSum / (pensionReceiveYears * 12);
 
-    // ── 부족분 ──
-    const companyTotal = nationalPensionMonthly + retirementPensionMonthly;
-    const gap = Math.max(0, desiredMonthly - companyTotal);
+    // ── 케이스 A: 퇴직금을 연금으로 받는 경우 ──
+    const totalA = nationalPensionMonthly + retirementPensionMonthly;
+    const gapA = Math.max(0, desiredMonthly - totalA);
+
+    // ── 케이스 B: 퇴직금을 일시금으로 받는 경우 ──
+    const totalB = nationalPensionMonthly; // 국민연금만
+    const gapB = Math.max(0, desiredMonthly - totalB);
 
     // ── 결과 표시 ──
     document.getElementById('resultDesired').textContent = `${formatNumber(desiredMonthly)}만원`;
     document.getElementById('resultNational').textContent = `약 ${formatNumber(nationalPensionMonthly)}만원`;
-    document.getElementById('resultRetirement').textContent = `약 ${formatNumber(retirementPensionMonthly)}만원`;
-    document.getElementById('resultCompanyTotal').textContent = `약 ${formatNumber(companyTotal)}만원`;
-    document.getElementById('resultGap').textContent = gap > 0 ? `${formatNumber(gap)}만원` : '부족분 없음!';
+    document.getElementById('resultLumpSum').textContent = `약 ${formatNumber(retirementLumpSum)}만원`;
+
+    // 케이스 A
+    document.getElementById('resultRetirementMonthly').textContent = `약 ${formatNumber(retirementPensionMonthly)}만원`;
+    document.getElementById('resultTotalA').textContent = `약 ${formatNumber(totalA)}만원`;
+    document.getElementById('resultGapA').textContent = gapA > 0 ? `${formatNumber(gapA)}만원` : '부족분 없음!';
+
+    // 케이스 B
+    document.getElementById('resultLumpSum2').textContent = `약 ${formatNumber(retirementLumpSum)}만원 (별도 수령)`;
+    document.getElementById('resultTotalB').textContent = `약 ${formatNumber(totalB)}만원`;
+    document.getElementById('resultGapB').textContent = gapB > 0 ? `${formatNumber(gapB)}만원` : '부족분 없음!';
+
+    // 케이스 표시/숨김
+    document.getElementById('caseAnnuity').style.display = (retirementType === 'both' || retirementType === 'annuity') ? 'block' : 'none';
+    document.getElementById('caseLumpsum').style.display = (retirementType === 'both' || retirementType === 'lumpsum') ? 'block' : 'none';
 
     // ── 개인연금 월 납입액 계산 ──
-    // 은퇴 시점까지 적립 → 연금 수령 기간 동안 gap만큼 인출
-    // 필요한 총 자금 = gap × 12 × pensionReceiveYears (만원)
-    const totalNeeded = gap * 12 * pensionReceiveYears;
     const monthsToRetirement = yearsUntilRetirement * 12;
-
     const rates = [3, 5, 7, 10];
-    rates.forEach(rate => {
-        const monthlyRate = rate / 100 / 12;
-        let monthlyPayment;
-        if (monthlyRate === 0) {
-            monthlyPayment = totalNeeded / monthsToRetirement;
-        } else {
-            // FV of annuity: FV = PMT × ((1+r)^n - 1) / r
-            // PMT = FV × r / ((1+r)^n - 1)
-            const factor = Math.pow(1 + monthlyRate, monthsToRetirement) - 1;
-            monthlyPayment = totalNeeded * monthlyRate / factor;
-        }
 
-        const totalPaid = monthlyPayment * monthsToRetirement;
-        const el = document.getElementById('rate' + rate);
-        el.innerHTML = `
-            <span>${rate}%</span>
-            <span>${formatNumber(monthlyPayment)}만원</span>
-            <span>${formatNumber(totalPaid)}만원</span>
-        `;
-    });
+    function calcMonthly(gap, prefix) {
+        const totalNeeded = gap * 12 * pensionReceiveYears;
+        rates.forEach(rate => {
+            const monthlyRate = rate / 100 / 12;
+            let monthlyPayment;
+            if (monthlyRate === 0 || monthsToRetirement === 0) {
+                monthlyPayment = monthsToRetirement > 0 ? totalNeeded / monthsToRetirement : totalNeeded;
+            } else {
+                const factor = Math.pow(1 + monthlyRate, monthsToRetirement) - 1;
+                monthlyPayment = totalNeeded * monthlyRate / factor;
+            }
+            const totalPaid = monthlyPayment * monthsToRetirement;
+            const el = document.getElementById(prefix + rate);
+            el.innerHTML = `
+                <span>${rate}%</span>
+                <span>${formatNumber(monthlyPayment)}만원</span>
+                <span>${formatNumber(totalPaid)}만원</span>
+            `;
+        });
+    }
+
+    calcMonthly(gapA, 'rateA');
+    calcMonthly(gapB, 'rateB');
 
     // ── 가정 목록 ──
     const assumptions = [
         `정년 퇴직 나이: ${retirementAge}세, 연금 수령 시작: ${pensionReceiveAge}세`,
         `연금 수령 기간: ${pensionReceiveYears}년 (${pensionReceiveAge}세 ~ ${pensionReceiveAge + pensionReceiveYears}세)`,
         `국민연금: 전체 가입자 평균소득월액 280만원 기준, 가입기간 ${Math.round(nationalPensionYears)}년`,
-        `퇴직연금: 현재 월급 기준 총 ${Math.round(totalWorkYears)}년 근속 가정`,
+        `퇴직금: 현재 월급 × 총 ${Math.round(totalWorkYears)}년 근속 기준`,
+        `퇴직연금 전환 시: 퇴직금을 ${pensionReceiveYears}년간 균등 분할`,
         `물가 상승률 미반영 (현재 가치 기준)`,
         `개인연금 수익률은 세전 기준`,
     ];

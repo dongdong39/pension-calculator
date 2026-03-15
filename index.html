@@ -108,6 +108,16 @@
                     </div>
                     <div class="input-hint">국민연금 수령 개시 나이 (1969년 이후 출생: 65세)</div>
                 </div>
+
+                <div class="input-group">
+                    <label>퇴직금 수령 방식</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" data-value="both" onclick="setRetirementType(this)">둘 다 비교</button>
+                        <button class="toggle-btn" data-value="annuity" onclick="setRetirementType(this)">연금으로 수령</button>
+                        <button class="toggle-btn" data-value="lumpsum" onclick="setRetirementType(this)">일시금으로 수령</button>
+                    </div>
+                    <div class="input-hint">퇴직금을 매달 나눠 받을지, 한번에 받을지 선택</div>
+                </div>
             </div>
 
             <div class="nav-buttons">
@@ -129,42 +139,82 @@
                 </div>
 
                 <div class="result-section">
-                    <h3>예상 연금 수령액 (월)</h3>
+                    <h3>공통 예상 수령액</h3>
                     <div class="result-item">
-                        <span class="result-label">국민연금 예상액</span>
+                        <span class="result-label">국민연금 예상액 (월)</span>
                         <span class="result-value" id="resultNational">-</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">퇴직연금 예상액 (연금 전환 시)</span>
-                        <span class="result-value" id="resultRetirement">-</span>
-                    </div>
-                    <div class="result-item total">
-                        <span class="result-label">회사 연금 합계</span>
-                        <span class="result-value" id="resultCompanyTotal">-</span>
+                        <span class="result-label">퇴직금 총액 (일시금)</span>
+                        <span class="result-value" id="resultLumpSum">-</span>
                     </div>
                 </div>
 
-                <div class="result-section gap-section">
-                    <h3>부족한 금액</h3>
-                    <div class="result-item gap">
-                        <span class="result-label">매달 추가로 필요한 금액</span>
-                        <span class="result-value" id="resultGap">-</span>
-                    </div>
-                </div>
-
-                <div class="result-section">
-                    <h3>개인연금 필요 납입액 (월)</h3>
-                    <p class="section-desc">부족분을 개인연금으로 채우려면, 수익률에 따라 매달 이만큼 넣어야 합니다.</p>
-                    <div class="rate-table">
-                        <div class="rate-row header">
-                            <span>연 수익률</span>
-                            <span>월 납입액</span>
-                            <span>총 납입액</span>
+                <!-- 케이스 A: 퇴직금을 연금으로 받는 경우 -->
+                <div class="case-block" id="caseAnnuity">
+                    <div class="case-header case-a">케이스 A — 퇴직금을 연금으로 받는 경우</div>
+                    <div class="result-section">
+                        <div class="result-item">
+                            <span class="result-label">퇴직연금 월 수령액</span>
+                            <span class="result-value" id="resultRetirementMonthly">-</span>
                         </div>
-                        <div class="rate-row" id="rate3"></div>
-                        <div class="rate-row" id="rate5"></div>
-                        <div class="rate-row" id="rate7"></div>
-                        <div class="rate-row" id="rate10"></div>
+                        <div class="result-item total">
+                            <span class="result-label">연금 합계 (국민+퇴직)</span>
+                            <span class="result-value" id="resultTotalA">-</span>
+                        </div>
+                        <div class="result-item gap">
+                            <span class="result-label">부족분 (월)</span>
+                            <span class="result-value" id="resultGapA">-</span>
+                        </div>
+                    </div>
+                    <div class="result-section">
+                        <h3>개인연금 월 납입액</h3>
+                        <p class="section-desc">부족분을 채우기 위해 매달 넣어야 할 금액</p>
+                        <div class="rate-table">
+                            <div class="rate-row header">
+                                <span>연 수익률</span>
+                                <span>월 납입액</span>
+                                <span>총 납입액</span>
+                            </div>
+                            <div class="rate-row" id="rateA3"></div>
+                            <div class="rate-row" id="rateA5"></div>
+                            <div class="rate-row" id="rateA7"></div>
+                            <div class="rate-row" id="rateA10"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 케이스 B: 퇴직금을 일시금으로 받는 경우 -->
+                <div class="case-block" id="caseLumpsum">
+                    <div class="case-header case-b">케이스 B — 퇴직금을 일시금으로 받는 경우</div>
+                    <div class="result-section">
+                        <div class="result-item">
+                            <span class="result-label">퇴직금 일시금</span>
+                            <span class="result-value" id="resultLumpSum2">-</span>
+                        </div>
+                        <div class="result-item total">
+                            <span class="result-label">연금 합계 (국민연금만)</span>
+                            <span class="result-value" id="resultTotalB">-</span>
+                        </div>
+                        <div class="result-item gap">
+                            <span class="result-label">부족분 (월)</span>
+                            <span class="result-value" id="resultGapB">-</span>
+                        </div>
+                    </div>
+                    <div class="result-section">
+                        <h3>개인연금 월 납입액</h3>
+                        <p class="section-desc">퇴직금은 별도 보관, 부족분만 개인연금으로 채울 때</p>
+                        <div class="rate-table">
+                            <div class="rate-row header">
+                                <span>연 수익률</span>
+                                <span>월 납입액</span>
+                                <span>총 납입액</span>
+                            </div>
+                            <div class="rate-row" id="rateB3"></div>
+                            <div class="rate-row" id="rateB5"></div>
+                            <div class="rate-row" id="rateB7"></div>
+                            <div class="rate-row" id="rateB10"></div>
+                        </div>
                     </div>
                 </div>
 
