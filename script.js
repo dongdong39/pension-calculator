@@ -163,6 +163,12 @@ function showCalculating() {
     nextMsg();
 }
 
+function toggleSection(id, btn) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+    btn.querySelector('.faq-arrow').classList.toggle('open');
+}
+
 function toggleFaq(btn) {
     const item = btn.parentElement;
     const isOpen = item.classList.contains('open');
