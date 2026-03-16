@@ -384,6 +384,52 @@ header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; 
 }
 .assumptions li::before { content: '·'; position: absolute; left: 0; color: #6a6580; }
 
+/* ═══════ NPS Guide ═══════ */
+.nps-summary {
+    display: flex; gap: 10px; margin-bottom: 20px;
+}
+.nps-stat {
+    flex: 1; text-align: center; padding: 14px 8px; border-radius: 12px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.06);
+}
+.nps-stat-value {
+    display: block; font-size: 22px; font-weight: 800; color: #a78bfa; margin-bottom: 4px;
+}
+.nps-stat-label {
+    font-size: 12px; color: #a09bb5; line-height: 1.4;
+}
+.nps-stat-label small { color: #8a85a0; }
+
+.nps-formula {
+    padding: 12px 14px; border-radius: 8px; margin-bottom: 12px;
+    background: rgba(0,0,0,0.2); font-size: 12px; color: #c4b5fd;
+    font-family: monospace; text-align: center; line-height: 1.6;
+    overflow-x: auto;
+}
+
+.nps-example-table { border-radius: 8px; overflow: hidden; }
+.nps-ex-row {
+    display: grid; grid-template-columns: 1.2fr 0.8fr 1fr;
+    padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px; color: #c5c1d6;
+}
+.nps-ex-row.header {
+    background: rgba(255,255,255,0.05); color: #a09bb5; font-weight: 600; font-size: 12px;
+}
+.nps-ex-row.accent {
+    background: rgba(167,139,250,0.08);
+}
+.nps-ex-row.accent span { color: #c4b5fd; font-weight: 600; }
+.nps-ex-row span:not(:first-child) { text-align: right; }
+
+.nps-reality {
+    padding: 16px 18px; border-radius: 12px; margin-top: 12px;
+    background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.15);
+}
+.nps-reality h3 { font-size: 15px; font-weight: 700; color: #fcd34d; margin-bottom: 8px; }
+.nps-reality p { font-size: 13px; color: #c5c1d6; line-height: 1.7; }
+.nps-reality strong { color: #fbbf24; }
+
 /* ═══════ Guide Section ═══════ */
 .guide-card { background: rgba(255, 255, 255, 0.05); }
 
