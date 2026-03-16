@@ -163,6 +163,14 @@ function showCalculating() {
     nextMsg();
 }
 
+function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    // 같은 카테고리 안에서 다른 열린 것 닫기 (선택사항)
+    item.classList.toggle('open');
+    btn.querySelector('.faq-arrow').classList.toggle('open');
+}
+
 function toggleTaxDetail() {
     const content = document.getElementById('taxDetail');
     const arrow = document.getElementById('taxArrow');
