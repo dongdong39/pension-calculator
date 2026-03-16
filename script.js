@@ -163,10 +163,13 @@ function showCalculating() {
     nextMsg();
 }
 
-function toggleSection(id, btn) {
-    const el = document.getElementById(id);
-    el.classList.toggle('open');
-    btn.querySelector('.faq-arrow').classList.toggle('open');
+function toggleSection(contentId, wrapperId) {
+    const content = document.getElementById(contentId);
+    const wrapper = document.getElementById(wrapperId);
+    const arrow = wrapper.querySelector('.faq-arrow');
+    content.classList.toggle('open');
+    wrapper.classList.toggle('open');
+    arrow.classList.toggle('open');
 }
 
 function toggleFaq(btn) {

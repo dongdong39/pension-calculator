@@ -321,12 +321,13 @@
             </div>
 
             <!-- ━━━ 상세 계산 내역 (접기) ━━━ -->
-            <div class="card" style="margin-top:16px">
-                <button class="section-toggle" onclick="toggleSection('detailSection', this)">
+            <div class="toggle-wrapper" id="detailWrapper" style="margin-top:16px">
+                <button class="section-toggle" onclick="toggleSection('detailSection', 'detailWrapper')">
                     <span>상세 계산 내역</span>
                     <span class="faq-arrow">▼</span>
                 </button>
                 <div class="collapsible" id="detailSection">
+                <div class="collapsible-inner">
                     <!-- 국민연금 -->
                     <div class="result-section">
                         <h3>국민연금 (예상)</h3>
@@ -400,8 +401,9 @@
                         </ul>
                         <p>정확한 국민연금 예상액은 <a href="https://www.nps.or.kr" target="_blank" class="notice-link">국민연금공단 (nps.or.kr)</a>에서 확인하세요.</p>
                     </div>
-                </div>
-            </div>
+                </div><!-- /collapsible-inner -->
+                </div><!-- /collapsible -->
+            </div><!-- /toggle-wrapper -->
 
             <!-- ═══════ 연금 구성 ═══════ -->
             <div class="card guide-card" style="margin-top:20px">
@@ -470,11 +472,13 @@
                 </div>
 
                 <!-- 상세 정보 (접기) -->
-                <button class="section-toggle" onclick="toggleSection('personalDetail', this)" style="margin-top:12px">
+                <div class="toggle-wrapper" id="personalWrapper" style="margin-top:12px">
+                <button class="section-toggle" onclick="toggleSection('personalDetail', 'personalWrapper')">
                     <span>주의사항 및 상세 비교</span>
                     <span class="faq-arrow">▼</span>
                 </button>
                 <div class="collapsible" id="personalDetail">
+                <div class="collapsible-inner">
 
                 <!-- 공통 주의사항 -->
                 <div class="warning-box">
@@ -551,7 +555,9 @@
                     </div>
                 </div>
 
-                </div><!-- /collapsible personalDetail -->
+                </div><!-- /collapsible-inner -->
+                </div><!-- /collapsible -->
+                </div><!-- /toggle-wrapper -->
 
                 <!-- 추천 조합 -->
                 <div class="recommend-box">
@@ -605,11 +611,13 @@
                 </div>
 
                 <!-- 상세 내용 (접기) -->
-                <button class="section-toggle" onclick="toggleSection('npsDetail', this)" style="margin-top:12px">
+                <div class="toggle-wrapper" id="npsWrapper" style="margin-top:12px">
+                <button class="section-toggle" onclick="toggleSection('npsDetail', 'npsWrapper')">
                     <span>국민연금 상세 정보</span>
                     <span class="faq-arrow">▼</span>
                 </button>
                 <div class="collapsible" id="npsDetail">
+                <div class="collapsible-inner">
                     <div class="guide-card-item">
                         <h3>얼마나 받나요?</h3>
                         <p class="guide-desc">가입기간이 길수록, 소득이 높을수록 더 많이 받아요.</p>
@@ -682,7 +690,9 @@
                     <div class="input-hint" style="margin-top:12px; text-align:center">
                         정확한 내 예상 수령액은 <a href="https://www.nps.or.kr" target="_blank" class="notice-link">국민연금공단 (nps.or.kr)</a>에서 확인하세요
                     </div>
-                </div>
+                </div><!-- /collapsible-inner -->
+                </div><!-- /collapsible -->
+                </div><!-- /toggle-wrapper -->
             </div>
 
             <!-- ═══════ FAQ ═══════ -->
