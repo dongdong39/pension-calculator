@@ -198,6 +198,18 @@
         <!-- ═══════ Step 3: 결과 ═══════ -->
         <div class="step-content" id="step3">
 
+            <!-- 계산 중 오버레이 -->
+            <div class="calc-overlay" id="calcOverlay">
+                <div class="calc-spinner"></div>
+                <div class="calc-message" id="calcMessage">계산 준비 중...</div>
+                <div class="calc-progress">
+                    <div class="calc-progress-fill" id="calcProgressFill"></div>
+                </div>
+            </div>
+
+            <!-- 결과 컨텐츠 (계산 후 표시) -->
+            <div id="resultContent" style="display:none">
+
             <!-- ━━━ 핵심 결과 (눈에 띄게) ━━━ -->
             <div class="card hero-card">
                 <div class="hero-top">
@@ -532,6 +544,8 @@
             <div class="nav-buttons">
                 <button class="btn btn-prev" onclick="prevStep(3)">← 다시 계산하기</button>
             </div>
+
+            </div><!-- /resultContent -->
         </div>
 
         <footer>

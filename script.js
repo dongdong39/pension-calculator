@@ -106,7 +106,10 @@ function nextStep(from) {
     document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
     document.getElementById('step' + currentStep).classList.add('active');
     updateProgress(currentStep);
-    if (currentStep === 3) calculate();
+    if (currentStep === 3) {
+        showCalculating();
+        return;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -117,6 +120,47 @@ function prevStep(from) {
     document.getElementById('step' + currentStep).classList.add('active');
     updateProgress(currentStep);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showCalculating() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const overlay = document.getElementById('calcOverlay');
+    const resultContent = document.getElementById('resultContent');
+    overlay.style.display = 'flex';
+    resultContent.style.display = 'none';
+
+    const messages = [
+        '국민연금 예상액 계산 중...',
+        '퇴직연금 계산 중...',
+        '퇴직소득세 적용 중...',
+        '개인연금 필요액 산출 중...',
+        '결과 정리 중...',
+    ];
+
+    const msgEl = document.getElementById('calcMessage');
+    const progressFill = document.getElementById('calcProgressFill');
+    let idx = 0;
+
+    function nextMsg() {
+        if (idx < messages.length) {
+            msgEl.textContent = messages[idx];
+            progressFill.style.width = ((idx + 1) / messages.length * 100) + '%';
+            idx++;
+            setTimeout(nextMsg, 400 + Math.random() * 300);
+        } else {
+            // 계산 실행
+            calculate();
+            // 짠! 전환
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                resultContent.style.display = 'block';
+                resultContent.classList.remove('result-reveal');
+                void resultContent.offsetWidth; // reflow
+                resultContent.classList.add('result-reveal');
+            }, 300);
+        }
+    }
+    nextMsg();
 }
 
 function toggleTaxDetail() {
