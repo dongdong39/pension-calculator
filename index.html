@@ -197,85 +197,44 @@
 
         <!-- ═══════ Step 3: 결과 ═══════ -->
         <div class="step-content" id="step3">
-            <div class="card result-card">
-                <h2>계산 결과</h2>
 
-                <!-- 희망 수령액 -->
-                <div class="result-summary">
-                    <div class="result-item highlight">
-                        <span class="result-label">희망 월 수령액</span>
-                        <span class="result-value" id="resultDesired">-</span>
+            <!-- ━━━ 핵심 결과 (눈에 띄게) ━━━ -->
+            <div class="card hero-card">
+                <div class="hero-top">
+                    <span class="hero-label">희망 월 수령액</span>
+                    <span class="hero-desired" id="resultDesired">-</span>
+                </div>
+                <div class="hero-breakdown">
+                    <div class="hero-col">
+                        <span class="hero-col-label">국민연금</span>
+                        <span class="hero-col-value" id="resultNational">-</span>
+                    </div>
+                    <div class="hero-plus">+</div>
+                    <div class="hero-col">
+                        <span class="hero-col-label">퇴직연금</span>
+                        <span class="hero-col-value" id="resultRetirementSummary">-</span>
+                    </div>
+                    <div class="hero-plus">=</div>
+                    <div class="hero-col">
+                        <span class="hero-col-label">부족분</span>
+                        <span class="hero-col-value hero-gap" id="resultGapSummary">-</span>
                     </div>
                 </div>
+                <div class="hero-message" id="heroMessage"></div>
+            </div>
 
-                <!-- 국민연금 -->
-                <div class="result-section">
-                    <h3>국민연금 (예상)</h3>
-                    <div class="result-item">
-                        <span class="result-label">예상 가입기간</span>
-                        <span class="result-value" id="resultNationalYears">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">월 예상 수령액</span>
-                        <span class="result-value accent" id="resultNational">-</span>
-                    </div>
-                </div>
-
-                <!-- 퇴직연금 -->
-                <div class="result-section">
-                    <h3>퇴직연금 (<span id="resultDBDCType">DB</span>)</h3>
-                    <div class="result-item">
-                        <span class="result-label">퇴직금 총액 (세전)</span>
-                        <span class="result-value" id="resultRetirementGross">-</span>
-                    </div>
-                    <div class="result-item sub">
-                        <span class="result-label">퇴직소득세 + 지방세</span>
-                        <span class="result-value dim" id="resultTax">-</span>
-                    </div>
-                    <div class="result-item sub">
-                        <span class="result-label">실효세율</span>
-                        <span class="result-value dim" id="resultTaxRate">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">퇴직금 실수령액</span>
-                        <span class="result-value accent" id="resultRetirementNet">-</span>
-                    </div>
-
-                    <!-- 세금 계산 과정 펼치기 -->
-                    <button class="expand-btn" onclick="toggleTaxDetail()">
-                        세금 계산 과정 보기 <span class="expand-arrow" id="taxArrow">▼</span>
-                    </button>
-                    <div class="expand-content" id="taxDetail">
-                        <div class="detail-row"><span>근속공제</span><span id="detailDeduction">-</span></div>
-                        <div class="detail-row"><span>퇴직소득과세표준</span><span id="detailTaxBase">-</span></div>
-                        <div class="detail-row"><span>연평균과세표준</span><span id="detailAnnualAvg">-</span></div>
-                        <div class="detail-row"><span>환산과세표준 (×12)</span><span id="detailConverted">-</span></div>
-                        <div class="detail-row"><span>차등공제</span><span id="detailDiffDeduction">-</span></div>
-                        <div class="detail-row"><span>최종 환산과세표준</span><span id="detailFinalBase">-</span></div>
-                        <div class="detail-row"><span>산출세액</span><span id="detailCalcTax">-</span></div>
-                        <div class="detail-row"><span>퇴직소득세</span><span id="detailIncomeTax">-</span></div>
-                        <div class="detail-row"><span>지방소득세 (10%)</span><span id="detailLocalTax">-</span></div>
-                    </div>
-                </div>
-
+            <!-- ━━━ 개인연금 필요 납입액 (가장 중요한 정보) ━━━ -->
+            <div class="card" style="margin-top:16px">
                 <!-- 케이스 A: 연금 수령 -->
                 <div class="case-block" id="caseAnnuity">
                     <div class="case-header case-a">퇴직금을 연금으로 받는 경우</div>
                     <div class="result-section case-body">
                         <div class="result-item">
-                            <span class="result-label">퇴직연금 월 수령액</span>
-                            <span class="result-value" id="resultAnnuityMonthly">-</span>
-                        </div>
-                        <div class="result-item sub">
-                            <span class="result-label">연금 수령 시 세금 감면</span>
-                            <span class="result-value green" id="resultAnnuityTaxSave">-</span>
-                        </div>
-                        <div class="result-item total">
                             <span class="result-label">월 연금 합계 (국민+퇴직)</span>
                             <span class="result-value green" id="resultTotalA">-</span>
                         </div>
                         <div class="result-item gap">
-                            <span class="result-label">부족분 (월)</span>
+                            <span class="result-label">매달 부족한 금액</span>
                             <span class="result-value" id="resultGapA">-</span>
                         </div>
                         <div class="rate-section">
@@ -296,15 +255,15 @@
                     <div class="case-header case-b">퇴직금을 일시금으로 받는 경우</div>
                     <div class="result-section case-body">
                         <div class="result-item">
-                            <span class="result-label">퇴직금 일시금 수령</span>
-                            <span class="result-value" id="resultLumpNet">-</span>
-                        </div>
-                        <div class="result-item total">
                             <span class="result-label">월 연금 합계 (국민연금만)</span>
                             <span class="result-value green" id="resultTotalB">-</span>
                         </div>
+                        <div class="result-item">
+                            <span class="result-label">퇴직금 일시금 수령</span>
+                            <span class="result-value" id="resultLumpNet">-</span>
+                        </div>
                         <div class="result-item gap">
-                            <span class="result-label">부족분 (월)</span>
+                            <span class="result-label">매달 부족한 금액</span>
                             <span class="result-value" id="resultGapB">-</span>
                         </div>
                         <div class="rate-section">
@@ -329,6 +288,68 @@
                     </span>
                     <span class="compound-link-arrow">→</span>
                 </a>
+            </div>
+
+            <!-- ━━━ 상세 내역 (펼쳐보기) ━━━ -->
+            <div class="card" style="margin-top:16px">
+                <h2>상세 계산 내역</h2>
+
+                <!-- 국민연금 -->
+                <div class="result-section">
+                    <h3>국민연금 (예상)</h3>
+                    <div class="result-item">
+                        <span class="result-label">예상 가입기간</span>
+                        <span class="result-value" id="resultNationalYears">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">월 예상 수령액</span>
+                        <span class="result-value accent" id="resultNational2">-</span>
+                    </div>
+                </div>
+
+                <!-- 퇴직연금 -->
+                <div class="result-section">
+                    <h3>퇴직연금 (<span id="resultDBDCType">DB</span>)</h3>
+                    <div class="result-item">
+                        <span class="result-label">퇴직금 총액 (세전)</span>
+                        <span class="result-value" id="resultRetirementGross">-</span>
+                    </div>
+                    <div class="result-item sub">
+                        <span class="result-label">퇴직소득세 + 지방세</span>
+                        <span class="result-value dim" id="resultTax">-</span>
+                    </div>
+                    <div class="result-item sub">
+                        <span class="result-label">실효세율</span>
+                        <span class="result-value dim" id="resultTaxRate">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">퇴직금 실수령액</span>
+                        <span class="result-value accent" id="resultRetirementNet">-</span>
+                    </div>
+                    <div class="result-item sub" id="annuityDetailRow">
+                        <span class="result-label">연금 전환 시 월 수령액</span>
+                        <span class="result-value" id="resultAnnuityMonthly">-</span>
+                    </div>
+                    <div class="result-item sub" id="annuityTaxSaveRow">
+                        <span class="result-label">연금 수령 시 세금 감면</span>
+                        <span class="result-value green" id="resultAnnuityTaxSave">-</span>
+                    </div>
+
+                    <button class="expand-btn" onclick="toggleTaxDetail()">
+                        세금 계산 과정 보기 <span class="expand-arrow" id="taxArrow">▼</span>
+                    </button>
+                    <div class="expand-content" id="taxDetail">
+                        <div class="detail-row"><span>근속공제</span><span id="detailDeduction">-</span></div>
+                        <div class="detail-row"><span>퇴직소득과세표준</span><span id="detailTaxBase">-</span></div>
+                        <div class="detail-row"><span>연평균과세표준</span><span id="detailAnnualAvg">-</span></div>
+                        <div class="detail-row"><span>환산과세표준 (×12)</span><span id="detailConverted">-</span></div>
+                        <div class="detail-row"><span>차등공제</span><span id="detailDiffDeduction">-</span></div>
+                        <div class="detail-row"><span>최종 환산과세표준</span><span id="detailFinalBase">-</span></div>
+                        <div class="detail-row"><span>산출세액</span><span id="detailCalcTax">-</span></div>
+                        <div class="detail-row"><span>퇴직소득세</span><span id="detailIncomeTax">-</span></div>
+                        <div class="detail-row"><span>지방소득세 (10%)</span><span id="detailLocalTax">-</span></div>
+                    </div>
+                </div>
 
                 <!-- 가정 -->
                 <div class="assumptions">

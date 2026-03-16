@@ -339,16 +339,54 @@ function calculate() {
     const tax = calcRetirementTax(retirementGrossWon, Math.round(totalWorkYears));
     const retirementNetMan = retirementGrossMan - tax.totalTax / 10000;
 
-    // ── 결과 표시 ──
+    // ── 케이스 계산 ──
+    const annuityTaxDiscount = POLICY.annuityTaxDiscount;
+    const retirementNetAnnuityMan = retirementGrossMan - (tax.totalTax / 10000) * (1 - annuityTaxDiscount);
+    const annuityMonthly = retirementNetAnnuityMan / (pensionReceiveYears * 12);
+    const totalA = nationalMonthly + annuityMonthly;
+    const gapA = Math.max(0, desiredMonthly - totalA);
+    const taxSaved = (tax.totalTax / 10000) * annuityTaxDiscount;
+    const totalB = nationalMonthly;
+    const gapB = Math.max(0, desiredMonthly - totalB);
+
+    // 히어로 카드에 쓸 대표 부족분 (연금 수령 기준, 둘 다면 A 기준)
+    const mainGap = (receiveType === 'lumpsum') ? gapB : gapA;
+    const mainRetirement = (receiveType === 'lumpsum') ? '일시금' : `약 ${fmt(annuityMonthly)}만원/월`;
+
+    // ── 히어로 카드 ──
     document.getElementById('resultDesired').textContent = `${fmt(desiredMonthly)}만원`;
+    document.getElementById('resultNational').textContent = `약 ${fmt(nationalMonthly)}만원`;
+    document.getElementById('resultRetirementSummary').textContent = mainRetirement;
+    document.getElementById('resultGapSummary').textContent = mainGap > 0 ? `${fmt(mainGap)}만원` : '없음!';
+
+    const heroMsg = mainGap > 0
+        ? `매달 <strong>${fmt(mainGap)}만원</strong>이 부족합니다. 이 부족분을 개인연금으로 채워야 합니다.`
+        : '국민연금과 퇴직연금만으로 목표 수령액을 충분히 달성할 수 있습니다!';
+    document.getElementById('heroMessage').innerHTML = heroMsg;
+
+    // ── 케이스 A 표시 ──
+    document.getElementById('resultTotalA').textContent = `약 ${fmt(totalA)}만원`;
+    document.getElementById('resultGapA').textContent = gapA > 0 ? `${fmt(gapA)}만원` : '부족분 없음!';
+
+    // ── 케이스 B 표시 ──
+    document.getElementById('resultLumpNet').textContent = `약 ${fmt(retirementNetMan)}만원 (세후)`;
+    document.getElementById('resultTotalB').textContent = `약 ${fmt(totalB)}만원`;
+    document.getElementById('resultGapB').textContent = gapB > 0 ? `${fmt(gapB)}만원` : '부족분 없음!';
+
+    // 케이스 표시/숨김
+    document.getElementById('caseAnnuity').style.display = (receiveType === 'both' || receiveType === 'annuity') ? 'block' : 'none';
+    document.getElementById('caseLumpsum').style.display = (receiveType === 'both' || receiveType === 'lumpsum') ? 'block' : 'none';
+
+    // ── 상세 내역 ──
     document.getElementById('resultDBDCType').textContent = dbdcType === 'db' ? 'DB 확정급여' : 'DC 확정기여';
     document.getElementById('resultNationalYears').textContent = `${Math.round(nationalPensionYears)}년`;
-    document.getElementById('resultNational').textContent = `약 ${fmt(nationalMonthly)}만원`;
-
+    document.getElementById('resultNational2').textContent = `약 ${fmt(nationalMonthly)}만원`;
     document.getElementById('resultRetirementGross').textContent = `약 ${fmt(retirementGrossMan)}만원`;
     document.getElementById('resultTax').textContent = `-${fmtWon(Math.round(tax.totalTax / 10000))}만원`;
     document.getElementById('resultTaxRate').textContent = `${(tax.effectiveRate * 100).toFixed(1)}%`;
     document.getElementById('resultRetirementNet').textContent = `약 ${fmt(retirementNetMan)}만원`;
+    document.getElementById('resultAnnuityMonthly').textContent = `약 ${fmt(annuityMonthly)}만원`;
+    document.getElementById('resultAnnuityTaxSave').textContent = `약 ${fmt(taxSaved)}만원 절세`;
 
     // 세금 상세
     document.getElementById('detailDeduction').textContent = `${fmtWon(tax.deduction)}원`;
@@ -360,31 +398,6 @@ function calculate() {
     document.getElementById('detailCalcTax').textContent = `${fmtWon(Math.round(tax.calcTax))}원`;
     document.getElementById('detailIncomeTax').textContent = `${fmtWon(Math.round(tax.incomeTax))}원`;
     document.getElementById('detailLocalTax').textContent = `${fmtWon(Math.round(tax.localTax))}원`;
-
-    // 케이스 A: 연금 수령 (세금 30% 감면)
-    const annuityTaxDiscount = POLICY.annuityTaxDiscount;
-    const retirementNetAnnuityMan = retirementGrossMan - (tax.totalTax / 10000) * (1 - annuityTaxDiscount);
-    const annuityMonthly = retirementNetAnnuityMan / (pensionReceiveYears * 12);
-    const totalA = nationalMonthly + annuityMonthly;
-    const gapA = Math.max(0, desiredMonthly - totalA);
-    const taxSaved = (tax.totalTax / 10000) * annuityTaxDiscount;
-
-    document.getElementById('resultAnnuityMonthly').textContent = `약 ${fmt(annuityMonthly)}만원`;
-    document.getElementById('resultAnnuityTaxSave').textContent = `약 ${fmt(taxSaved)}만원 절세`;
-    document.getElementById('resultTotalA').textContent = `약 ${fmt(totalA)}만원`;
-    document.getElementById('resultGapA').textContent = gapA > 0 ? `${fmt(gapA)}만원` : '부족분 없음!';
-
-    // 케이스 B: 일시금 수령
-    const totalB = nationalMonthly;
-    const gapB = Math.max(0, desiredMonthly - totalB);
-
-    document.getElementById('resultLumpNet').textContent = `약 ${fmt(retirementNetMan)}만원 (세후)`;
-    document.getElementById('resultTotalB').textContent = `약 ${fmt(totalB)}만원`;
-    document.getElementById('resultGapB').textContent = gapB > 0 ? `${fmt(gapB)}만원` : '부족분 없음!';
-
-    // 케이스 표시
-    document.getElementById('caseAnnuity').style.display = (receiveType === 'both' || receiveType === 'annuity') ? 'block' : 'none';
-    document.getElementById('caseLumpsum').style.display = (receiveType === 'both' || receiveType === 'lumpsum') ? 'block' : 'none';
 
     // 개인연금 납입액
     const rates = [3, 5, 7, 10];
