@@ -115,7 +115,18 @@ function toggleTaxDetail() {
     arrow.classList.toggle('open');
 }
 
-function fmt(num) { return Math.round(num).toLocaleString('ko-KR'); }
+function fmt(num) {
+    const n = Math.round(num);
+    const abs = Math.abs(n);
+    if (abs >= 10000) {
+        const eok = Math.floor(abs / 10000);
+        const rest = abs % 10000;
+        const sign = n < 0 ? '-' : '';
+        if (rest === 0) return `${sign}${eok.toLocaleString('ko-KR')}억`;
+        return `${sign}${eok.toLocaleString('ko-KR')}억 ${rest.toLocaleString('ko-KR')}`;
+    }
+    return n.toLocaleString('ko-KR');
+}
 function fmtWon(num) { return Math.round(num).toLocaleString('ko-KR'); }
 
 // ═══════ Calculations ═══════
