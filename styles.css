@@ -609,11 +609,22 @@ header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; 
 /* ═══════ Section Toggle (접기) ═══════ */
 .section-toggle {
     display: flex; justify-content: space-between; align-items: center;
-    width: 100%; padding: 14px 0; border: none; background: none;
-    color: #d0ccf0; font-size: 18px; font-weight: 600; text-align: left;
-    cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.08);
+    width: 100%; padding: 14px 18px; border: none;
+    background: rgba(102,126,234,0.08);
+    border: 1px solid rgba(102,126,234,0.18);
+    border-radius: 12px;
+    color: #c4b5fd; font-size: 14px; font-weight: 600; text-align: left;
+    cursor: pointer; transition: all 0.2s;
 }
-.section-toggle:hover { color: #a78bfa; }
+.section-toggle:hover {
+    background: rgba(102,126,234,0.15);
+    border-color: rgba(102,126,234,0.3);
+    color: #d6ccff;
+}
+.section-toggle .toggle-label { display: flex; align-items: center; gap: 8px; }
+.section-toggle .toggle-hint {
+    font-size: 12px; font-weight: 400; color: #8a85a0;
+}
 .collapsible {
     max-height: 0; overflow: hidden;
     transition: max-height 0.4s ease, padding 0.3s ease;
