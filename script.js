@@ -203,6 +203,7 @@ function calcRetirementTax(lumpSumWon, serviceYears) {
 function calcPersonalPension(gap, pensionReceiveYears, yearsUntilRetirement, rates, prefix) {
     const totalNeeded = gap * 12 * pensionReceiveYears; // 만원
     const months = yearsUntilRetirement * 12;
+    const years = yearsUntilRetirement;
     rates.forEach(rate => {
         const mr = rate / 100 / 12;
         let monthly;
@@ -212,8 +213,10 @@ function calcPersonalPension(gap, pensionReceiveYears, yearsUntilRetirement, rat
             monthly = totalNeeded * mr / (Math.pow(1 + mr, months) - 1);
         }
         const total = monthly * months;
+        const monthlyRound = Math.round(monthly);
+        const compoundUrl = `https://dongdong39.github.io/compound-calculator/?mode=monthly&monthly=${monthlyRound}&rate=${rate}&years=${years}`;
         document.getElementById(prefix + rate).innerHTML =
-            `<span>${rate}%</span><span>${fmt(monthly)}만원</span><span>${fmt(total)}만원</span>`;
+            `<span>${rate}%</span><span>${fmt(monthly)}만원</span><span><a href="${compoundUrl}" target="_blank" class="rate-link">${fmt(total)}만원 →</a></span>`;
     });
 }
 
