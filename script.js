@@ -25,6 +25,17 @@ function setReceiveType(btn) {
     document.getElementById('receiveBg').style.transform = `translateX(${btn.dataset.index * 100}%)`;
 }
 
+function openSalaryCalc(e) {
+    e.preventDefault();
+    const salary = getVal('annualSalary') || '';
+    const rate = getVal('wageGrowth') || '';
+    const retAge = getVal('retirementAge') || 60;
+    const curAge = getVal('currentAge') || 30;
+    const years = retAge - curAge;
+    const url = `https://dongdong39.github.io/salary-calculator/?salary=${salary}&rate=${rate}&years=${years > 0 ? years : ''}`;
+    window.open(url, '_blank');
+}
+
 // 숫자 입력 제한
 document.querySelectorAll('input[inputmode="numeric"]').forEach(input => {
     input.addEventListener('input', function () {
