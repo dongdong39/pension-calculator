@@ -235,7 +235,7 @@
                 <div class="hero-message" id="heroMessage"></div>
             </div>
 
-            <!-- ━━━ 개인연금 필요 납입액 (가장 중요한 정보) ━━━ -->
+            <!-- ━━━ 개인연금 필요 납입액 ━━━ -->
             <div class="card" style="margin-top:16px">
                 <!-- 케이스 A: 연금 수령 -->
                 <div class="case-block" id="caseAnnuity">
@@ -249,15 +249,24 @@
                             <span class="result-label">매달 부족한 금액</span>
                             <span class="result-value" id="resultGapA">-</span>
                         </div>
+
+                        <!-- 총 필요 금액 (충격) -->
+                        <div class="total-needed-box" id="totalNeededA">
+                            <div class="total-needed-label">이 부족분을 25년간 받으려면</div>
+                            <div class="total-needed-value" id="totalNeededValueA">-</div>
+                            <div class="total-needed-sub">은퇴 시점까지 이 금액을 만들어야 합니다</div>
+                        </div>
+
                         <div class="rate-section">
-                            <div class="rate-title">개인연금으로 매달 넣어야 할 금액</div>
+                            <div class="rate-title">이 금액을 만들기 위해 매달 넣어야 할 금액</div>
                             <div class="rate-table">
-                                <div class="rate-row header"><span>수익률</span><span>월 납입</span><span>총 납입</span></div>
+                                <div class="rate-row header"><span>수익률</span><span>월 납입</span><span>총 납입 (내 돈)</span></div>
                                 <div class="rate-row" id="rateA3"></div>
                                 <div class="rate-row" id="rateA5"></div>
                                 <div class="rate-row" id="rateA7"></div>
                                 <div class="rate-row" id="rateA10"></div>
                             </div>
+                            <div class="rate-hint">총 납입은 내가 실제로 넣는 돈이고, 나머지는 복리 수익이 채워줍니다</div>
                         </div>
                     </div>
                 </div>
@@ -278,15 +287,24 @@
                             <span class="result-label">매달 부족한 금액</span>
                             <span class="result-value" id="resultGapB">-</span>
                         </div>
+
+                        <!-- 총 필요 금액 (충격) -->
+                        <div class="total-needed-box" id="totalNeededB">
+                            <div class="total-needed-label">이 부족분을 25년간 받으려면</div>
+                            <div class="total-needed-value" id="totalNeededValueB">-</div>
+                            <div class="total-needed-sub">은퇴 시점까지 이 금액을 만들어야 합니다</div>
+                        </div>
+
                         <div class="rate-section">
-                            <div class="rate-title">개인연금으로 매달 넣어야 할 금액</div>
+                            <div class="rate-title">이 금액을 만들기 위해 매달 넣어야 할 금액</div>
                             <div class="rate-table">
-                                <div class="rate-row header"><span>수익률</span><span>월 납입</span><span>총 납입</span></div>
+                                <div class="rate-row header"><span>수익률</span><span>월 납입</span><span>총 납입 (내 돈)</span></div>
                                 <div class="rate-row" id="rateB3"></div>
                                 <div class="rate-row" id="rateB5"></div>
                                 <div class="rate-row" id="rateB7"></div>
                                 <div class="rate-row" id="rateB10"></div>
                             </div>
+                            <div class="rate-hint">총 납입은 내가 실제로 넣는 돈이고, 나머지는 복리 수익이 채워줍니다</div>
                         </div>
                     </div>
                 </div>

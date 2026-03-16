@@ -264,6 +264,25 @@ header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; 
 .result-item.gap .result-label { font-weight: 600; color: #e0ddf0; }
 .result-item.gap .result-value { color: #f87171; font-size: 20px; }
 
+/* ── Total Needed Box ── */
+.total-needed-box {
+    margin: 16px 0; padding: 20px; border-radius: 14px; text-align: center;
+    background: linear-gradient(135deg, rgba(248,113,113,0.12), rgba(239,68,68,0.06));
+    border: 1px solid rgba(248,113,113,0.25);
+}
+.total-needed-label { font-size: 14px; color: #d0ccf0; margin-bottom: 8px; }
+.total-needed-value {
+    font-size: 36px; font-weight: 800; color: #f87171;
+    line-height: 1.2; margin-bottom: 6px;
+}
+.total-needed-sub { font-size: 12px; color: #a09bb5; }
+
+.rate-hint {
+    font-size: 12px; color: #8a85a0; text-align: center;
+    margin-top: 8px; padding: 8px;
+    background: rgba(255,255,255,0.03); border-radius: 6px;
+}
+
 /* ── Expand (세금 상세) ── */
 .expand-btn {
     display: block; width: 100%; margin-top: 10px; padding: 10px;

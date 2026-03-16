@@ -416,14 +416,22 @@ function calculate() {
         : '국민연금과 퇴직연금만으로 목표 수령액을 충분히 달성할 수 있습니다!';
     document.getElementById('heroMessage').innerHTML = heroMsg;
 
+    // ── 총 필요 금액 계산 ──
+    const totalNeededA = gapA * 12 * pensionReceiveYears;
+    const totalNeededB = gapB * 12 * pensionReceiveYears;
+
     // ── 케이스 A 표시 ──
     document.getElementById('resultTotalA').textContent = `약 ${fmt(totalA)}만원`;
     document.getElementById('resultGapA').textContent = gapA > 0 ? `${fmt(gapA)}만원` : '부족분 없음!';
+    document.getElementById('totalNeededValueA').textContent = gapA > 0 ? `${fmt(totalNeededA)}만원` : '-';
+    document.getElementById('totalNeededA').style.display = gapA > 0 ? 'block' : 'none';
 
     // ── 케이스 B 표시 ──
     document.getElementById('resultLumpNet').textContent = `약 ${fmt(retirementNetMan)}만원 (세후)`;
     document.getElementById('resultTotalB').textContent = `약 ${fmt(totalB)}만원`;
     document.getElementById('resultGapB').textContent = gapB > 0 ? `${fmt(gapB)}만원` : '부족분 없음!';
+    document.getElementById('totalNeededValueB').textContent = gapB > 0 ? `${fmt(totalNeededB)}만원` : '-';
+    document.getElementById('totalNeededB').style.display = gapB > 0 ? 'block' : 'none';
 
     // 케이스 표시/숨김
     document.getElementById('caseAnnuity').style.display = (receiveType === 'both' || receiveType === 'annuity') ? 'block' : 'none';
