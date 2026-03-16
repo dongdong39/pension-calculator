@@ -263,6 +263,26 @@ header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; 
 }
 .inline-link:hover { background: rgba(167,139,250,0.2); color: #c4b5fd; }
 
+/* ── Notice Box ── */
+.notice-box {
+    margin-top: 14px; padding: 16px 18px;
+    background: rgba(102,126,234,0.06);
+    border: 1px solid rgba(102,126,234,0.15);
+    border-radius: 12px;
+}
+.notice-box h4 { font-size: 14px; font-weight: 700; color: #b0adc0; margin-bottom: 8px; }
+.notice-box p { font-size: 13px; color: #9a95b0; line-height: 1.6; margin-bottom: 8px; }
+.notice-box ul { list-style: none; padding: 0; margin-bottom: 8px; }
+.notice-box li {
+    font-size: 12px; color: #8a85a0; line-height: 1.6;
+    padding: 4px 0 4px 14px; position: relative;
+}
+.notice-box li::before { content: '·'; position: absolute; left: 0; color: #6a6580; }
+.notice-box li strong { color: #b0adc0; }
+.notice-box p:last-child { margin-bottom: 0; }
+.notice-link { color: #667eea; text-decoration: none; }
+.notice-link:hover { color: #a78bfa; text-decoration: underline; }
+
 /* ── Compound Link ── */
 .compound-link {
     display: flex; align-items: center; gap: 12px;

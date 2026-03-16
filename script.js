@@ -140,13 +140,64 @@ function fmt(num) {
 }
 function fmtWon(num) { return Math.round(num).toLocaleString('ko-KR'); }
 
+// ═══════ 정책 설정값 (변경 시 여기만 수정) ═══════
+
+const POLICY = {
+    // 국민연금
+    nationalPension: {
+        avgA: 309,              // 전체 가입자 평균소득월액 (만원, 2025년 기준)
+        incomeCap: 637,         // 기준소득월액 상한 (만원, 2025.7~2026.6)
+        replaceCoeff: 0.005375, // 소득대체율 계수 (43% 기준: 0.43/80)
+        maxYears: 40,           // 최대 가입기간
+        maxContribAge: 60,      // 가입 상한 나이
+    },
+    // 퇴직소득세 (2024년 기준, 2026년 변경 없음)
+    retirementTax: {
+        serviceDeduction: [     // 근속공제 [년수상한, 공제단가(원)]
+            [5, 1000000],
+            [10, 2000000],
+            [20, 2500000],
+            [Infinity, 3000000],
+        ],
+        serviceDeductionBase: [0, 5000000, 15000000, 40000000], // 누적 기본공제
+        diffDeductionBrackets: [ // 차등공제 [상한(원), 비율]
+            [8000000, 1.0],
+            [70000000, 0.6],
+            [100000000, 0.55],
+            [300000000, 0.45],
+            [Infinity, 0.35],
+        ],
+        taxBrackets: [ // 세율 [상한(원), 세율, 누진공제(원)]
+            [14000000, 0.06, 0],
+            [50000000, 0.15, 840000],
+            [88000000, 0.24, 6240000],
+            [150000000, 0.35, 15360000],
+            [300000000, 0.38, 37060000],
+            [500000000, 0.40, 94060000],
+            [1000000000, 0.42, 174060000],
+            [Infinity, 0.45, 384060000],
+        ],
+    },
+    // 연금 수령
+    annuityTaxDiscount: 0.3,    // 연금 수령 시 퇴직소득세 감면율 (30%)
+    pensionReceiveYears: 25,    // 연금 수령 기간 (년)
+    // 개인연금 세액공제 (가이드 표시용)
+    personalPension: {
+        deductionLimit: 600,    // 연금저축 한도 (만원)
+        irpLimit: 900,          // IRP 포함 한도 (만원)
+        rateHigh: 0.165,        // 총급여 5500만 이하 공제율
+        rateLow: 0.132,         // 총급여 5500만 초과 공제율
+        earlyWithdrawTax: 0.165,// 중도해지 기타소득세
+    },
+};
+
 // ═══════ Calculations ═══════
 
 function calcNationalPension(monthlySalaryMan, pensionYears) {
-    const avgA = 280; // 전체 가입자 평균소득월액 (만원)
-    const capped = Math.min(monthlySalaryMan, 590); // 상한
-    const years = Math.min(Math.max(pensionYears, 0), 40);
-    return years > 0 ? (avgA + capped) * years * 0.005 : 0;
+    const { avgA, incomeCap, replaceCoeff, maxYears } = POLICY.nationalPension;
+    const capped = Math.min(monthlySalaryMan, incomeCap);
+    const years = Math.min(Math.max(pensionYears, 0), maxYears);
+    return years > 0 ? (avgA + capped) * years * replaceCoeff : 0;
 }
 
 function calcDB(monthlySalaryMan, totalWorkYears, yearsUntilRetirement, wageGrowthRate) {
@@ -170,12 +221,20 @@ function calcDC(annualSalaryMan, yearsWorked, yearsUntilRetirement, wageGrowthRa
 }
 
 function calcRetirementTax(lumpSumWon, serviceYears) {
+    const { serviceDeduction, serviceDeductionBase, diffDeductionBrackets, taxBrackets } = POLICY.retirementTax;
+
     // 1. 근속공제
-    let deduction;
-    if (serviceYears <= 5) deduction = 1000000 * serviceYears;
-    else if (serviceYears <= 10) deduction = 5000000 + 2000000 * (serviceYears - 5);
-    else if (serviceYears <= 20) deduction = 15000000 + 2500000 * (serviceYears - 10);
-    else deduction = 40000000 + 3000000 * (serviceYears - 20);
+    let deduction = 0;
+    let remainYears = serviceYears;
+    let prevLimit = 0;
+    for (let i = 0; i < serviceDeduction.length; i++) {
+        const [limit, rate] = serviceDeduction[i];
+        const years = Math.min(remainYears, limit - prevLimit);
+        if (years <= 0) break;
+        deduction += years * rate;
+        remainYears -= years;
+        prevLimit = limit;
+    }
 
     // 2. 과세표준
     const taxableIncome = Math.max(0, lumpSumWon - deduction);
@@ -188,31 +247,34 @@ function calcRetirementTax(lumpSumWon, serviceYears) {
 
     // 5. 차등공제
     let diffDeduction = 0;
-    if (converted <= 8000000) {
-        diffDeduction = converted;
-    } else if (converted <= 70000000) {
-        diffDeduction = 8000000 + (converted - 8000000) * 0.6;
-    } else if (converted <= 100000000) {
-        diffDeduction = 8000000 + 62000000 * 0.6 + (converted - 70000000) * 0.55;
-    } else if (converted <= 300000000) {
-        diffDeduction = 8000000 + 62000000 * 0.6 + 30000000 * 0.55 + (converted - 100000000) * 0.45;
-    } else {
-        diffDeduction = 8000000 + 62000000 * 0.6 + 30000000 * 0.55 + 200000000 * 0.45 + (converted - 300000000) * 0.35;
+    let prevCap = 0;
+    for (const [cap, rate] of diffDeductionBrackets) {
+        const amount = Math.min(converted, cap) - prevCap;
+        if (amount <= 0) break;
+        diffDeduction += amount * rate;
+        prevCap = cap;
     }
 
     // 6. 환산과세표준
     const finalBase = Math.max(0, converted - diffDeduction);
 
     // 7. 세율
-    let calcTax;
-    if (finalBase <= 14000000) calcTax = finalBase * 0.06;
-    else if (finalBase <= 50000000) calcTax = 840000 + (finalBase - 14000000) * 0.15;
-    else if (finalBase <= 88000000) calcTax = 6240000 + (finalBase - 50000000) * 0.24;
-    else if (finalBase <= 150000000) calcTax = 15360000 + (finalBase - 88000000) * 0.35;
-    else if (finalBase <= 300000000) calcTax = 37060000 + (finalBase - 150000000) * 0.38;
-    else if (finalBase <= 500000000) calcTax = 94060000 + (finalBase - 300000000) * 0.4;
-    else if (finalBase <= 1000000000) calcTax = 174060000 + (finalBase - 500000000) * 0.42;
-    else calcTax = 384060000 + (finalBase - 1000000000) * 0.45;
+    let calcTax = 0;
+    for (const [cap, rate, base] of taxBrackets) {
+        if (finalBase <= cap) {
+            calcTax = base + (finalBase - (base > 0 ? taxBrackets[taxBrackets.indexOf(taxBrackets.find(b => b[2] === base)) - 1]?.[0] || 0 : 0)) * rate;
+            break;
+        }
+    }
+    // 간결한 세율 계산 (누진공제 방식)
+    calcTax = 0;
+    for (let i = 0; i < taxBrackets.length; i++) {
+        if (finalBase <= taxBrackets[i][0]) {
+            const prevCap = i > 0 ? taxBrackets[i - 1][0] : 0;
+            calcTax = taxBrackets[i][2] + (finalBase - prevCap) * taxBrackets[i][1];
+            break;
+        }
+    }
 
     // 8. 역환산
     const incomeTax = serviceYears > 0 ? calcTax / 12 * serviceYears : 0;
@@ -257,11 +319,11 @@ function calculate() {
     const monthlySalary = annualSalary / 12;
     const yearsUntilRetirement = retirementAge - currentAge;
     const totalWorkYears = yearsWorked + yearsUntilRetirement;
-    const pensionReceiveYears = 25; // 65세~90세
+    const pensionReceiveYears = POLICY.pensionReceiveYears;
 
     // 국민연금
     const pensionStartAge = Math.max(18, currentAge - yearsWorked);
-    const nationalPensionYears = Math.min(60, retirementAge) - pensionStartAge;
+    const nationalPensionYears = Math.min(POLICY.nationalPension.maxContribAge, retirementAge) - pensionStartAge;
     const nationalMonthly = Math.max(0, Math.round(calcNationalPension(monthlySalary, nationalPensionYears) * 10) / 10);
 
     // 퇴직연금 (DB or DC)
@@ -300,7 +362,7 @@ function calculate() {
     document.getElementById('detailLocalTax').textContent = `${fmtWon(Math.round(tax.localTax))}원`;
 
     // 케이스 A: 연금 수령 (세금 30% 감면)
-    const annuityTaxDiscount = 0.3;
+    const annuityTaxDiscount = POLICY.annuityTaxDiscount;
     const retirementNetAnnuityMan = retirementGrossMan - (tax.totalTax / 10000) * (1 - annuityTaxDiscount);
     const annuityMonthly = retirementNetAnnuityMan / (pensionReceiveYears * 12);
     const totalA = nationalMonthly + annuityMonthly;
@@ -330,13 +392,15 @@ function calculate() {
     calcPersonalPension(gapB, pensionReceiveYears, yearsUntilRetirement, rates, 'rateB');
 
     // 가정 목록
+    const P = POLICY.nationalPension;
     const assumptions = [
         `정년 ${retirementAge}세, 연금 수령 ${pensionReceiveAge}~${pensionReceiveAge + pensionReceiveYears}세 (${pensionReceiveYears}년간)`,
         `임금인상률 연 ${(wageGrowth * 100).toFixed(0)}% 가정`,
         dbdcType === 'dc' ? `DC 운용수익률 연 ${(returnRate * 100).toFixed(0)}% 가정` : `DB: 퇴직 시 최종월급 × 총 근속년수(${Math.round(totalWorkYears)}년)`,
-        `국민연금: 가입자 평균소득월액 280만원 기준, 가입기간 ${Math.round(nationalPensionYears)}년`,
-        `퇴직소득세: 2024년 기준 근속공제·차등공제·세율 적용`,
-        `연금 수령 시 퇴직소득세 30% 감면 적용`,
+        `국민연금: A값(전체 평균소득월액) ${P.avgA}만원, 상한 ${P.incomeCap}만원, 소득대체율 43% 기준`,
+        `국민연금 가입기간: ${Math.round(nationalPensionYears)}년 (${P.maxContribAge}세까지)`,
+        `퇴직소득세: 2026년 기준 근속공제·차등공제·세율 적용`,
+        `연금 수령 시 퇴직소득세 ${(POLICY.annuityTaxDiscount * 100).toFixed(0)}% 감면 적용`,
         `물가 상승률 미반영 (현재 가치 기준)`,
     ];
     document.getElementById('assumptionsList').innerHTML = assumptions.map(a => `<li>${a}</li>`).join('');
