@@ -83,7 +83,7 @@ function validateStep(step) {
         if (getVal('yearsWorked') <= 0) { showError('yearsWorked', '근무 년수를 입력해주세요'); valid = false; }
         if (getVal('retirementAge') <= getVal('currentAge')) { showError('retirementAge', '현재 나이보다 커야 합니다'); valid = false; }
         if (getVal('pensionReceiveAge') < getVal('retirementAge')) { showError('pensionReceiveAge', '퇴직 나이 이상이어야 합니다'); valid = false; }
-        if (getVal('wageGrowth') <= 0) { showError('wageGrowth', '임금인상률을 입력해주세요'); valid = false; }
+        if (document.getElementById('wageGrowth').value === '') { showError('wageGrowth', '임금인상률을 입력해주세요'); valid = false; }
         if (dbdcType === 'dc' && getVal('returnRate') <= 0) { showError('returnRate', '운용수익률을 입력해주세요'); valid = false; }
     }
     return valid;
