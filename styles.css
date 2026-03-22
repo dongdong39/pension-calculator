@@ -49,6 +49,14 @@ header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; 
 .card h2 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 8px; }
 .description { font-size: 14px; color: #a09bb5; margin-bottom: 20px; line-height: 1.6; }
 .description strong { color: #d0ccf0; }
+.privacy-notice {
+    font-size: 13px; color: #c0bdd5; text-align: center; font-weight: 500;
+    background: rgba(102, 126, 234, 0.12); border: 1px solid rgba(102, 126, 234, 0.25);
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; line-height: 1.5;
+}
+.privacy-notice::before {
+    content: '🔒 ';
+}
 .section-title {
     font-size: 13px; font-weight: 700; color: #667eea;
     text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
